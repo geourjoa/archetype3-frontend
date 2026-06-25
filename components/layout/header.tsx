@@ -37,6 +37,7 @@ import {
 } from '@/lib/search-history';
 import { resolveResultTypeLabel } from '@/lib/search-label-helpers';
 import { useModelLabels } from '@/contexts/model-labels-context';
+import { LanguageSwitcher } from '@/components/layout/language-switcher';
 
 const BANNER_VISIBLE_KEY = 'moa-header-banner-visible';
 
@@ -368,6 +369,7 @@ export default function Header() {
                 </div>
               )}
               <div className="flex items-center gap-1 shrink-0">
+                <LanguageSwitcher />
                 {token ? (
                   <>
                     {user?.is_superuser && (

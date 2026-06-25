@@ -48,7 +48,7 @@ export function LightboxExport({ onClose }: LightboxExportProps) {
     setIsExporting(true);
     try {
       if (!currentWorkspaceId) {
-        toast.error('No workspace selected');
+        toast.error(t('export.toastNoWorkspace'));
         return;
       }
 
@@ -71,7 +71,7 @@ export function LightboxExport({ onClose }: LightboxExportProps) {
       }
     } catch (error) {
       console.error('Export failed:', error);
-      toast.error('Export failed. Please try again.');
+      toast.error(t('export.toastExportFailed'));
     } finally {
       setIsExporting(false);
       onClose();
@@ -80,13 +80,13 @@ export function LightboxExport({ onClose }: LightboxExportProps) {
 
   const exportAsPDF = async (workspaceImages: LightboxImage[]) => {
     if (workspaceImages.length === 0) {
-      toast.error('No images to export');
+      toast.error(t('export.toastNoImages'));
       return;
     }
 
     // Ensure we're in browser
     if (typeof window === 'undefined' || typeof document === 'undefined') {
-      toast.error('PDF export is only available in the browser');
+      toast.error(t('export.toastPdfBrowserOnly'));
       return;
     }
 
@@ -159,7 +159,7 @@ export function LightboxExport({ onClose }: LightboxExportProps) {
       pdf.save(`lightbox-export-${Date.now()}.pdf`);
     } catch (error) {
       console.error('PDF export failed:', error);
-      toast.error('Failed to export PDF. Please try again.');
+      toast.error(t('export.toastPdfFailed'));
     }
   };
 
@@ -168,13 +168,13 @@ export function LightboxExport({ onClose }: LightboxExportProps) {
   // dialog once the images have loaded.
   const printWorkspace = (workspaceImages: LightboxImage[]) => {
     if (workspaceImages.length === 0) {
-      toast.error('No images to print');
+      toast.error(t('export.toastNoPrintImages'));
       return;
     }
     if (typeof window === 'undefined') return;
     const win = window.open('', '_blank');
     if (!win) {
-      toast.error('Pop-up blocked — allow pop-ups for this site to print.');
+      toast.error(t('export.toastPrintPopupBlocked'));
       return;
     }
     const figures = workspaceImages
@@ -205,7 +205,7 @@ export function LightboxExport({ onClose }: LightboxExportProps) {
 
   const exportAsImage = async (imagesToExport: LightboxImage[]) => {
     if (imagesToExport.length === 0) {
-      toast.error('No images to export');
+      toast.error(t('export.toastNoImages'));
       return;
     }
 
@@ -359,7 +359,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
         <div className="p-4 border-b flex items-center justify-between">
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <Download className="h-5 w-5" />
-            Export {selectedImageIds.size > 0 ? `${selectedImageIds.size} Selected` : 'Workspace'}
+            {selectedImageIds.size > 0 ? t('export.title', { count: selectedImageIds.size }) : t('export.titleWorkspace')}
           </h3>
           <Button variant="ghost" size="sm" onClick={onClose}>
             <X className="h-4 w-4" />
@@ -368,7 +368,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
 
         <div className="p-4 space-y-4">
           <div>
-            <label className="text-sm font-medium mb-2 block">Export Format</label>
+            <label className="text-sm font-medium mb-2 block">{t('export.formatLabel')}</label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => setExportFormat('pdf')}
@@ -379,7 +379,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
               >
                 <FileText className="h-5 w-5 mb-1" />
                 <div className="text-sm font-medium">PDF</div>
-                <div className="text-xs text-muted-foreground">Document</div>
+                <div className="text-xs text-muted-foreground">{t('export.pdfDocument')}</div>
               </button>
               <button
                 onClick={() => setExportFormat('image')}
@@ -390,7 +390,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
               >
                 <ImageIcon className="h-5 w-5 mb-1" />
                 <div className="text-sm font-medium">Image</div>
-                <div className="text-xs text-muted-foreground">Single image</div>
+                <div className="text-xs text-muted-foreground">{t('export.imageSingle')}</div>
               </button>
               <button
                 onClick={() => setExportFormat('json')}
@@ -401,7 +401,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
               >
                 <FileJson className="h-5 w-5 mb-1" />
                 <div className="text-sm font-medium">JSON</div>
-                <div className="text-xs text-muted-foreground">Data export</div>
+                <div className="text-xs text-muted-foreground">{t('export.jsonData')}</div>
               </button>
               <button
                 onClick={() => setExportFormat('tei')}
@@ -412,7 +412,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
               >
                 <FileText className="h-5 w-5 mb-1" />
                 <div className="text-sm font-medium">TEI XML</div>
-                <div className="text-xs text-muted-foreground">TEI format</div>
+                <div className="text-xs text-muted-foreground">{t('export.teiFormat')}</div>
               </button>
               <button
                 onClick={() => setExportFormat('print')}
@@ -423,7 +423,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
               >
                 <Printer className="h-5 w-5 mb-1" />
                 <div className="text-sm font-medium">Print</div>
-                <div className="text-xs text-muted-foreground">Print-friendly layout</div>
+                <div className="text-xs text-muted-foreground">{t('export.printFriendly')}</div>
               </button>
             </div>
           </div>
@@ -434,7 +434,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
             Cancel
           </Button>
           <Button onClick={handleExport} disabled={isExporting}>
-            {isExporting ? 'Exporting...' : 'Export'}
+            {isExporting ? t('export.exporting') : t('export.exportButton')}
           </Button>
         </div>
       </div>

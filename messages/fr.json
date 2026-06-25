@@ -552,5 +552,147 @@
       "toastSaveFailed": "Impossible d'enregistrer la copie de la collection",
       "toastSaved": "{name} enregistrée dans vos collections"
     }
+  },
+  "backoffice": {
+    "shell": {
+      "loading": "Chargement..."
+    },
+    "header": {
+      "toggleSidebar": "Basculer la barre latérale",
+      "signOut": "Se déconnecter",
+      "userFallback": "Administration",
+      "breadcrumbs": {
+        "backoffice": "Administration",
+        "symbols": "Paléographie",
+        "repositories": "Dépôts",
+        "publications": "Publications",
+        "events": "Événements",
+        "comments": "Commentaires",
+        "carousel": "Carrousel",
+        "scribes": "Scribes",
+        "hands": "Mains",
+        "formats": "Formats",
+        "sources": "Sources",
+        "annotations": "Annotations",
+        "physicalVolumes": "Volumes physiques",
+        "users": "Utilisateurs",
+        "searchEngine": "Moteur de recherche",
+        "translations": "Traductions",
+        "siteFeatures": "Fonctionnalités du site",
+        "new": "Nouveau"
+      }
+    },
+    "sidebar": {
+      "brand": "Administration",
+      "viewPublicSite": "Voir le site public",
+      "groupManuscripts": "Manuscrits & Paléographie",
+      "scribes": "Scribes",
+      "hands": "Mains",
+      "annotations": "Annotations",
+      "texts": "Textes",
+      "characters": "Caractères",
+      "supportingData": "Données de support",
+      "physicalVolumes": "Volumes physiques",
+      "repositories": "Dépôts",
+      "formats": "Formats",
+      "sources": "Sources",
+      "groupSiteContent": "Site & Contenu",
+      "publications": "Publications",
+      "comments": "Commentaires",
+      "carousel": "Carrousel",
+      "groupAdmin": "Administration",
+      "userManagement": "Gestion des utilisateurs",
+      "searchEngine": "Moteur de recherche",
+      "dataQuality": "Qualité des données",
+      "translations": "Traductions",
+      "siteFeatures": "Fonctionnalités du site",
+      "subGroupExpand": "Développer {label}",
+      "subGroupCollapse": "Réduire {label}"
+    },
+    "confirmDialog": {
+      "confirm": "Confirmer",
+      "cancel": "Annuler",
+      "processing": "Traitement..."
+    },
+    "unsavedBar": {
+      "message": "Vous avez des modifications non enregistrées",
+      "discard": "Annuler",
+      "saveChanges": "Enregistrer les modifications",
+      "saving": "Enregistrement..."
+    },
+    "errorBoundary": {
+      "title": "Une erreur est survenue",
+      "description": "Une erreur inattendue s'est produite lors du rendu de cette page. Vous pouvez réessayer ou naviguer vers une autre section.",
+      "errorDetails": "Détails de l'erreur",
+      "tryAgain": "Réessayer",
+      "goToDashboard": "Aller au tableau de bord"
+    },
+    "entityActions": {
+      "delete": "Supprimer",
+      "save": "Enregistrer"
+    },
+    "keyboardShortcuts": {
+      "title": "Raccourcis clavier",
+      "pressToShow": "Appuyez sur {key} à tout moment pour afficher cette fenêtre.",
+      "groupNavigation": "Navigation",
+      "groupEditing": "Édition",
+      "openCommandPalette": "Ouvrir la palette de commandes",
+      "showHelpDialog": "Afficher cette aide",
+      "saveCurrentForm": "Enregistrer le formulaire actuel",
+      "closeDialog": "Fermer / annuler les modifications"
+    },
+    "queryState": {
+      "retry": "Réessayer"
+    },
+    "notifications": {
+      "ariaLabel": "Notifications",
+      "unread": "{count} non lu(e)s",
+      "markAllRead": "Tout marquer comme lu",
+      "closeLabel": "Fermer les notifications",
+      "allCaughtUp": "Vous êtes à jour.",
+      "kindReviewAssigned": "Révisions assignées",
+      "kindCommentReply": "Réponses aux commentaires",
+      "kindMention": "Mentions"
+    },
+    "search": {
+      "inputPlaceholder": "Rechercher des pages, actions ou éléments récents...",
+      "noResults": "Aucun résultat trouvé.",
+      "groupRecent": "Récent",
+      "groupQuickActions": "Actions rapides",
+      "groupManuscripts": "Manuscrits & Paléographie",
+      "groupSiteContent": "Site & Contenu",
+      "groupAdmin": "Administration",
+      "groupGeneral": "Général",
+      "dashboard": "Tableau de bord",
+      "scribes": "Scribes",
+      "hands": "Mains",
+      "annotations": "Annotations",
+      "characters": "Caractères",
+      "repositories": "Dépôts",
+      "formats": "Formats",
+      "sources": "Sources",
+      "publications": "Publications",
+      "comments": "Commentaires",
+      "carousel": "Carrousel",
+      "searchEngine": "Moteur de recherche",
+      "translationsNav": "Traductions",
+      "siteFeatures": "Fonctionnalités du site",
+      "newPublication": "Nouvelle publication",
+      "moderateComments": "Modérer les commentaires"
+    },
+    "simpleCrud": {
+      "created": "{label} créé(e)",
+      "deleted": "{label} supprimé(e)",
+      "failedCreate": "Échec de la création de {label}",
+      "failedUpdate": "Échec de la mise à jour de {label}",
+      "failedDelete": "Échec de la suppression de {label}",
+      "failedLoad": "Échec du chargement de {label}",
+      "retry": "Réessayer",
+      "create": "Créer",
+      "new": "Nouveau {label}",
+      "idColumn": "ID",
+      "deleteLabel": "Supprimer {label}",
+      "searchPlaceholder": "Rechercher {label}..."
+    }
   }
 }

@@ -16,12 +16,13 @@ function writePrintDocument(win: Window, html: string) {
 }
 
 export function PrintCollectionButton({ collection }: { collection: NamedCollection }) {
+  const t = useTranslations('collection');
   const [isPrinting, setIsPrinting] = React.useState(false);
 
   const handlePrint = async () => {
     const win = window.open('', '_blank');
     if (!win) {
-      toast.error('Pop-up blocked. Allow pop-ups for this site to print.');
+      toast.error(t('print.popupBlocked'));
       return;
     }
 
@@ -35,7 +36,7 @@ export function PrintCollectionButton({ collection }: { collection: NamedCollect
       writePrintDocument(win, await buildCollectionPrintHtml(collection));
     } catch {
       win.close();
-      toast.error('Could not prepare collection print view.');
+      toast.error(t('print.failed'));
     } finally {
       setIsPrinting(false);
     }
@@ -50,7 +51,7 @@ export function PrintCollectionButton({ collection }: { collection: NamedCollect
       disabled={isPrinting}
     >
       <Printer className="mr-2 h-4 w-4" />
-      {isPrinting ? 'Preparing...' : 'Print'}
+      {isPrinting ? t('print.preparing') : t('print.print')}
     </Button>
   );
 }

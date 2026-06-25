@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Printer } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';

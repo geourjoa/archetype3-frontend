@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Upload, X, FileJson, FileText } from 'lucide-react';
 import { useLightboxStore } from '@/stores/lightbox-store';
@@ -15,6 +16,7 @@ interface LightboxImportProps {
 }
 
 export function LightboxImport({ onClose }: LightboxImportProps) {
+  const t = useTranslations('lightbox');
   const { loadImages, createWorkspace } = useLightboxStore();
   const [isImporting, setIsImporting] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);

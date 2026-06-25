@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Download, FileText, Image as ImageIcon, Printer, X, FileJson } from 'lucide-react';
 import { useLightboxStore, useWorkspaceImages } from '@/stores/lightbox-store';
@@ -31,6 +32,7 @@ function escapeXml(value: string): string {
 }
 
 export function LightboxExport({ onClose }: LightboxExportProps) {
+  const t = useTranslations('lightbox');
   const { currentWorkspaceId, workspaces, selectedImageIds } = useLightboxStore();
   const workspaceImages = useWorkspaceImages();
   const targetImages =

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Cloud, FolderOpen, Globe, Link2, Lock, Save, Trash2, X } from 'lucide-react';
@@ -27,6 +28,8 @@ interface LightboxSessionManagerProps {
 }
 
 export function LightboxSessionManager({ onClose, onLoad }: LightboxSessionManagerProps) {
+  const t = useTranslations('lightbox');
+  const tCommon = useTranslations('common');
   const { workspaces, currentWorkspaceId } = useLightboxStore();
   const workspaceImages = useWorkspaceImages();
   const { token } = useAuth();

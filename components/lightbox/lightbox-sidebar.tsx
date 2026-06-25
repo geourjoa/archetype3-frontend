@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import NextImage from 'next/image';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Plus, Trash2, Image as ImageIcon, Folder, X } from 'lucide-react';
@@ -37,6 +38,7 @@ function SidebarThumbnail({ image }: { image: LightboxImage }) {
 }
 
 export function LightboxSidebar() {
+  const t = useTranslations('lightbox');
   const {
     currentWorkspaceId,
     workspaces,
@@ -72,7 +74,7 @@ export function LightboxSidebar() {
           size="sm"
           onClick={() => setIsCollapsed(false)}
           className="mb-2"
-          aria-label="Expand workspaces sidebar"
+          aria-label={t('sidebar.expandLabel')}
           aria-expanded={false}
         >
           <Folder className="h-4 w-4" />

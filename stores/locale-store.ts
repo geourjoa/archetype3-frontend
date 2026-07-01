@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { type Locale, defaultLocale, locales, LOCALE_COOKIE } from '@/lib/i18n';
+import { type Locale, defaultLocale, locales, LOCALE_COOKIE } from '@/lib/locale';
 
 interface LocaleState {
   locale: Locale;

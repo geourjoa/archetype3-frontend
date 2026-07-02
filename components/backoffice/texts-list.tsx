@@ -484,9 +484,9 @@ export function TextsList() {
       <ConfirmDialog
         open={confirmBulkDelete}
         onOpenChange={setConfirmBulkDelete}
-        title={`Delete ${selectedCount} image-text${selectedCount === 1 ? '' : 's'}?`}
-        description="This permanently removes the rows and their status history. This cannot be undone."
-        confirmLabel="Delete"
+        title={t('textsList.bulkDeleteTitle', { count: selectedCount })}
+        description={t('textsList.bulkDeleteDescription')}
+        confirmLabel={t('textsList.bulkDeleteConfirm')}
         variant="destructive"
         loading={bulkDelete.isPending}
         onConfirm={() => bulkDelete.mutate()}
@@ -506,6 +506,7 @@ function FilterSelect({
   options: readonly (string | { value: string; label: string })[];
   onChange: (value: string) => void;
 }) {
+  const t = useTranslations('backoffice');
   const normalized = options.map((opt) =>
     typeof opt === 'string' ? { value: opt, label: opt } : opt
   );
@@ -516,7 +517,9 @@ function FilterSelect({
         <SelectValue placeholder={label} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="__all__">All {label.toLowerCase()}</SelectItem>
+        <SelectItem value="__all__">
+          {t('textsList.filterAllOption', { label: label.toLowerCase() })}
+        </SelectItem>
         {normalized.map((opt) => (
           <SelectItem key={opt.value} value={opt.value}>
             {opt.label}
@@ -540,6 +543,7 @@ function BulkActionBar({
   onInvalidated: () => void;
   onAskDelete: () => void;
 }) {
+  const t = useTranslations('backoffice');
   const [transitionOpen, setTransitionOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [toStatus, setToStatus] = useState<ImageTextStatus>('Review');
@@ -554,13 +558,14 @@ function BulkActionBar({
         payload: { to_status: toStatus, note: note.trim() || undefined },
       }),
     onSuccess: ({ affected }) => {
-      toast.success(`Transitioned ${affected} → ${toStatus}`);
+      toast.success(t('textsList.toastBulkTransitioned', { count: affected, status: toStatus }));
       setTransitionOpen(false);
       setNote('');
       onCleared();
       onInvalidated();
     },
-    onError: (err: Error) => toast.error('Bulk transition failed', { description: err.message }),
+    onError: (err: Error) =>
+      toast.error(t('textsList.toastBulkTransitionFailed'), { description: err.message }),
   });
 
   const languageMut = useMutation({
@@ -571,28 +576,29 @@ function BulkActionBar({
         payload: { language },
       }),
     onSuccess: ({ affected }) => {
-      toast.success(`Set language on ${affected} rows`);
+      toast.success(t('textsList.toastBulkLanguageSet', { count: affected }));
       setLanguageOpen(false);
       setLanguage('');
       onCleared();
       onInvalidated();
     },
-    onError: (err: Error) => toast.error('Bulk set-language failed', { description: err.message }),
+    onError: (err: Error) =>
+      toast.error(t('textsList.toastBulkLanguageFailed'), { description: err.message }),
   });
 
   return (
     <div className="mx-6 flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2 text-xs">
-      <span className="font-medium">{ids.length} selected</span>
+      <span className="font-medium">{t('textsList.selectedCount', { count: ids.length })}</span>
       <div className="ml-auto flex items-center gap-2">
         <Popover open={transitionOpen} onOpenChange={setTransitionOpen}>
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="h-7 text-xs">
-              Transition…
+              {t('imageTexts.transitionButton')}
             </Button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-72 space-y-3">
             <div className="space-y-1.5">
-              <Label className="text-xs">Target status</Label>
+              <Label className="text-xs">{t('imageTexts.transitionTargetLabel')}</Label>
               <Select value={toStatus} onValueChange={(v) => setToStatus(v as ImageTextStatus)}>
                 <SelectTrigger className="h-8 text-xs">
                   <SelectValue />
@@ -607,11 +613,11 @@ function BulkActionBar({
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs">Note (optional)</Label>
+              <Label className="text-xs">{t('imageTexts.transitionNoteLabel')}</Label>
               <Input
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                placeholder="What changed?"
+                placeholder={t('imageTexts.transitionNotePlaceholder')}
                 className="h-8 text-xs"
               />
             </div>
@@ -622,7 +628,7 @@ function BulkActionBar({
                 className="h-7 text-xs"
                 onClick={() => setTransitionOpen(false)}
               >
-                Cancel
+                {t('imageTexts.transitionCancel')}
               </Button>
               <Button
                 size="sm"
@@ -630,7 +636,9 @@ function BulkActionBar({
                 disabled={transitionMut.isPending}
                 onClick={() => transitionMut.mutate()}
               >
-                {transitionMut.isPending ? 'Saving…' : `→ ${toStatus}`}
+                {transitionMut.isPending
+                  ? t('imageTexts.transitionSaving')
+                  : t('imageTexts.transitionApply', { target: toStatus })}
               </Button>
             </div>
           </PopoverContent>
@@ -639,16 +647,16 @@ function BulkActionBar({
         <Popover open={languageOpen} onOpenChange={setLanguageOpen}>
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="h-7 text-xs">
-              Set language…
+              {t('textsList.setLanguageButton')}
             </Button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-64 space-y-3">
             <div className="space-y-1.5">
-              <Label className="text-xs">Language</Label>
+              <Label className="text-xs">{t('imageTexts.fieldLanguage')}</Label>
               <Input
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                placeholder='e.g. la, en, enm. Empty for "(unset)"'
+                placeholder={t('textsList.setLanguagePlaceholder')}
                 className="h-8 text-xs"
               />
             </div>
@@ -659,7 +667,7 @@ function BulkActionBar({
                 className="h-7 text-xs"
                 onClick={() => setLanguageOpen(false)}
               >
-                Cancel
+                {t('imageTexts.transitionCancel')}
               </Button>
               <Button
                 size="sm"
@@ -667,7 +675,9 @@ function BulkActionBar({
                 disabled={languageMut.isPending}
                 onClick={() => languageMut.mutate()}
               >
-                {languageMut.isPending ? 'Saving…' : 'Apply'}
+                {languageMut.isPending
+                  ? t('imageTexts.transitionSaving')
+                  : t('textsList.setLanguageApply')}
               </Button>
             </div>
           </PopoverContent>
@@ -680,12 +690,12 @@ function BulkActionBar({
           onClick={onAskDelete}
         >
           <Trash2 className="mr-1 h-3 w-3" />
-          Delete
+          {t('imageTexts.deleteButton')}
         </Button>
 
         <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={onCleared}>
           <X className="mr-1 h-3 w-3" />
-          Clear
+          {t('textsList.clearSelection')}
         </Button>
       </div>
     </div>
@@ -705,6 +715,7 @@ function ListRow({
   onTransitioned: () => void;
   token: string;
 }) {
+  const t = useTranslations('backoffice');
   const editorLink = `/backoffice/image-texts/${row.id}`;
   const panel = row.type === 'Transcription' ? 'transcription' : 'translation';
   const viewerLink = row.item_part_id
@@ -717,7 +728,7 @@ function ListRow({
         <Checkbox
           checked={selected}
           onCheckedChange={onToggle}
-          aria-label={`Select image-text ${row.id}`}
+          aria-label={t('textsList.selectRow', { id: row.id })}
         />
       </TableCell>
       <TableCell>
@@ -728,16 +739,20 @@ function ListRow({
             KIND_TONE[row.type]
           )}
         >
-          {row.type === 'Transcription' ? 'Transcr.' : 'Transl.'}
+          {row.type === 'Transcription'
+            ? t('textsList.kindTranscriptionShort')
+            : t('textsList.kindTranslationShort')}
         </Badge>
       </TableCell>
       <TableCell>
         <Link href={editorLink} className="flex flex-col">
           <span className="font-medium leading-tight hover:underline">
-            {row.item_image_label || `Image #${row.item_image}`}
+            {row.item_image_label || t('textsList.imageFallbackLabel', { id: row.item_image })}
           </span>
           {row.item_image_locus && (
-            <span className="text-[11px] text-muted-foreground">folio {row.item_image_locus}</span>
+            <span className="text-[11px] text-muted-foreground">
+              {t('imageTexts.breadcrumbFolio', { locus: row.item_image_locus })}
+            </span>
           )}
         </Link>
       </TableCell>
@@ -761,7 +776,7 @@ function ListRow({
       </TableCell>
       <TableCell className="text-right font-mono text-xs">
         {row.is_empty ? (
-          <span className="text-amber-600 dark:text-amber-400">empty</span>
+          <span className="text-amber-600 dark:text-amber-400">{t('textsList.emptyContent')}</span>
         ) : (
           row.char_count.toLocaleString()
         )}
@@ -777,9 +792,9 @@ function ListRow({
           <Link
             href={editorLink}
             className="flex h-7 items-center rounded-md border px-2 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-            title="Open editor"
+            title={t('textsList.openEditorTitle')}
           >
-            Edit
+            {t('textsList.editLink')}
           </Link>
           {viewerLink ? (
             <Link
@@ -787,7 +802,7 @@ function ListRow({
               target="_blank"
               rel="noopener"
               className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              title="Open in public viewer"
+              title={t('textsList.openPublicViewerTitle')}
             >
               <ArrowUpRight className="h-3.5 w-3.5" />
             </Link>
@@ -809,6 +824,7 @@ function TransitionPopover({
   token: string;
   onTransitioned: () => void;
 }) {
+  const t = useTranslations('backoffice');
   // Default target = next forward step in the lifecycle so the common path
   // (Draft → Review → Live → Reviewed) is one click.
   const NEXT: Record<ImageTextStatus, ImageTextStatus> = {
@@ -828,12 +844,13 @@ function TransitionPopover({
         note: note.trim() || undefined,
       }),
     onSuccess: () => {
-      toast.success(`#${row.id} → ${target}`);
+      toast.success(t('textsList.toastRowTransitioned', { id: row.id, target }));
       setOpen(false);
       setNote('');
       onTransitioned();
     },
-    onError: (err: Error) => toast.error('Transition failed', { description: err.message }),
+    onError: (err: Error) =>
+      toast.error(t('imageTexts.toastTransitionFailed'), { description: err.message }),
   });
 
   return (
@@ -849,16 +866,16 @@ function TransitionPopover({
     >
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-7 text-xs">
-          Transition
+          {t('textsList.rowTransitionButton')}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-72 space-y-3">
         <div className="text-xs">
-          <p className="text-muted-foreground">Current</p>
+          <p className="text-muted-foreground">{t('imageTexts.transitionCurrent')}</p>
           <p className="font-medium">{row.status}</p>
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs">Target status</Label>
+          <Label className="text-xs">{t('imageTexts.transitionTargetLabel')}</Label>
           <Select value={target} onValueChange={(v) => setTarget(v as ImageTextStatus)}>
             <SelectTrigger className="h-8 text-xs">
               <SelectValue />
@@ -873,17 +890,17 @@ function TransitionPopover({
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs">Note (optional)</Label>
+          <Label className="text-xs">{t('imageTexts.transitionNoteLabel')}</Label>
           <Input
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="What changed?"
+            placeholder={t('imageTexts.transitionNotePlaceholder')}
             className="h-8 text-xs"
           />
         </div>
         <div className="flex justify-end gap-2 pt-1">
           <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setOpen(false)}>
-            Cancel
+            {t('imageTexts.transitionCancel')}
           </Button>
           <Button
             size="sm"
@@ -891,7 +908,9 @@ function TransitionPopover({
             disabled={transition.isPending}
             onClick={() => transition.mutate()}
           >
-            {transition.isPending ? 'Saving…' : `→ ${target}`}
+            {transition.isPending
+              ? t('imageTexts.transitionSaving')
+              : t('imageTexts.transitionApply', { target })}
           </Button>
         </div>
       </PopoverContent>

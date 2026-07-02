@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import {
   Activity,
   ArrowUpRight,
@@ -85,6 +86,7 @@ function isView(value: string | null): value is View {
 }
 
 export function TextsMonitor() {
+  const t = useTranslations('backoffice');
   const { token } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -120,7 +122,7 @@ export function TextsMonitor() {
 
       {error && (
         <div className="rounded-md border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-          Could not load monitoring data: {(error as Error).message}
+          {t('texts.loadError', { message: (error as Error).message })}
         </div>
       )}
 
@@ -163,7 +165,7 @@ export function TextsMonitor() {
         </>
       ) : (
         <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
-          {isFetching ? <Loader2 className="h-5 w-5 animate-spin" /> : 'No data yet.'}
+          {isFetching ? <Loader2 className="h-5 w-5 animate-spin" /> : t('texts.noDataYet')}
         </div>
       )}
     </div>
@@ -176,37 +178,14 @@ export function TextsMonitor() {
 // a time — the dashboard charts, or one of the three data tables — instead of
 // stacking everything in a single long scroll. Drill-down links from the KPI
 // strip and charts route here via the `view` URL param.
-const VIEW_META: {
-  key: View;
-  label: string;
-  hint: string;
-  icon: typeof LayoutDashboard;
-}[] = [
-  {
-    key: 'overview',
-    label: 'Overview',
-    hint: 'Lifecycle, coverage, activity and language charts.',
-    icon: LayoutDashboard,
-  },
-  {
-    key: 'browse',
-    label: 'Browse',
-    hint: 'Search, filter, transition and export every image-text.',
-    icon: ListFilter,
-  },
-  {
-    key: 'uncovered',
-    label: 'Uncovered',
-    hint: 'Images still missing a transcription or translation.',
-    icon: ImageOff,
-  },
-  {
-    key: 'recent',
-    label: 'Recent edits',
-    hint: 'The most-recently modified image-texts.',
-    icon: History,
-  },
-];
+const VIEW_ICONS: Record<View, typeof LayoutDashboard> = {
+  overview: LayoutDashboard,
+  browse: ListFilter,
+  uncovered: ImageOff,
+  recent: History,
+};
+
+const VIEW_ORDER: View[] = ['overview', 'browse', 'uncovered', 'recent'];
 
 const ViewSwitcher = memo(function ViewSwitcher({
   view,
@@ -217,16 +196,23 @@ const ViewSwitcher = memo(function ViewSwitcher({
   onChange: (view: View) => void;
   counts: { recent: number; browse: number; uncovered: number };
 }) {
-  const active = VIEW_META.find((v) => v.key === view) ?? VIEW_META[0];
+  const t = useTranslations('backoffice');
+  const viewMeta = VIEW_ORDER.map((key) => ({
+    key,
+    label: t(`texts.view.${key}.label`),
+    hint: t(`texts.view.${key}.hint`),
+    icon: VIEW_ICONS[key],
+  }));
+  const active = viewMeta.find((v) => v.key === view) ?? viewMeta[0];
   return (
     <div className="sticky top-0 z-20 -mx-6 border-b border-border/60 bg-background/85 px-6 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/65">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         <div
           role="tablist"
-          aria-label="Choose a view"
+          aria-label={t('texts.view.ariaLabel')}
           className="inline-flex items-center gap-1 rounded-xl border bg-muted/30 p-1"
         >
-          {VIEW_META.map((v) => {
+          {viewMeta.map((v) => {
             const Icon = v.icon;
             const isActive = v.key === view;
             const count =
@@ -291,24 +277,22 @@ function Header({
   loading: boolean;
   onRefresh: () => void;
 }) {
+  const t = useTranslations('backoffice');
   return (
     <header className="flex flex-wrap items-end justify-between gap-4">
       <div>
         <p className="font-display text-[11px] uppercase tracking-[0.32em] text-[hsl(var(--c-transcription-h)_55%_38%)] dark:text-[hsl(var(--c-transcription-h)_45%_70%)]">
-          ❦ Editorial monitor
+          {t('texts.eyebrow')}
         </p>
         <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight">
-          Transcriptions &amp; Translations
+          {t('texts.title')}
         </h1>
-        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-          A live read-out of every image-text in the corpus — where it sits in the Draft → Review →
-          Live → Reviewed lifecycle, what languages dominate, and who edited what most recently.
-        </p>
+        <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{t('texts.description')}</p>
       </div>
       <div className="flex items-center gap-3">
         {generatedAt && (
           <span className="text-xs text-muted-foreground">
-            Snapshot {new Date(generatedAt).toLocaleString()}
+            {t('texts.snapshot', { datetime: new Date(generatedAt).toLocaleString() })}
           </span>
         )}
         <Button variant="outline" size="sm" onClick={onRefresh} disabled={loading}>
@@ -317,7 +301,7 @@ function Header({
           ) : (
             <RefreshCcw className="mr-2 h-3.5 w-3.5" />
           )}
-          Refresh
+          {t('texts.refresh')}
         </Button>
       </div>
     </header>
@@ -335,12 +319,13 @@ const KpiStrip = memo(function KpiStrip({
   coverage: CoveragePayload;
   health: AnnotationHealth;
 }) {
+  const t = useTranslations('backoffice');
   const kpis = [
     {
       icon: ScrollText,
-      label: 'Transcriptions',
+      label: t('texts.kpi.transcriptions'),
       value: matrix.totals.Transcription,
-      sub: `${matrix.empty_by_kind.Transcription} empty`,
+      sub: t('texts.kpi.empty', { count: matrix.empty_by_kind.Transcription }),
       tone: 'transcription' as const,
       // The KPI is a corpus-wide aggregate; clicking it should open the
       // Browse panel filtered to just that kind so editors can jump from
@@ -349,17 +334,20 @@ const KpiStrip = memo(function KpiStrip({
     },
     {
       icon: BookOpenText,
-      label: 'Translations',
+      label: t('texts.kpi.translations'),
       value: matrix.totals.Translation,
-      sub: `${matrix.empty_by_kind.Translation} empty`,
+      sub: t('texts.kpi.empty', { count: matrix.empty_by_kind.Translation }),
       tone: 'translation' as const,
       href: '?kind=Translation&view=browse',
     },
     {
       icon: Sparkles,
-      label: 'Image coverage',
+      label: t('texts.kpi.imageCoverage'),
       value: pct(coverage.with_either, coverage.images_total),
-      sub: `${coverage.with_either.toLocaleString()} of ${coverage.images_total.toLocaleString()} images`,
+      sub: t('texts.kpi.ofImages', {
+        covered: coverage.with_either.toLocaleString(),
+        total: coverage.images_total.toLocaleString(),
+      }),
       tone: 'neutral' as const,
       href: undefined,
     },

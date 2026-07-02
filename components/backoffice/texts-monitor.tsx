@@ -353,9 +353,9 @@ const KpiStrip = memo(function KpiStrip({
     },
     {
       icon: Activity,
-      label: 'Annotations / text',
+      label: t('texts.kpi.annotationsPerText'),
       value: health.average_annotations_per_text.toFixed(2),
-      sub: `${health.annotations_total.toLocaleString()} regions linked`,
+      sub: t('texts.kpi.regionsLinked', { count: health.annotations_total }),
       tone: 'neutral' as const,
       href: undefined,
     },
@@ -421,6 +421,7 @@ const StatusMatrix = memo(function StatusMatrix({
   matrix: MatrixPayload;
   className?: string;
 }) {
+  const t = useTranslations('backoffice');
   const max = useMemo(() => {
     let m = 0;
     for (const kind of matrix.kinds) {
@@ -434,10 +435,8 @@ const StatusMatrix = memo(function StatusMatrix({
   return (
     <Card className={className}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-medium">Lifecycle</CardTitle>
-        <p className="text-xs text-muted-foreground">
-          Where every transcription and translation currently sits.
-        </p>
+        <CardTitle className="text-base font-medium">{t('texts.lifecycle.title')}</CardTitle>
+        <p className="text-xs text-muted-foreground">{t('texts.lifecycle.description')}</p>
       </CardHeader>
       <CardContent>
         <div className="grid gap-3">

@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowUpRight,
@@ -126,6 +127,7 @@ function buildExportQuery(filters: UrlFilterState, format: 'csv' | 'json'): stri
 }
 
 export function TextsList() {
+  const t = useTranslations('backoffice');
   const router = useRouter();
   const searchParams = useSearchParams();
   const { token } = useAuth();
@@ -262,12 +264,13 @@ export function TextsList() {
   const bulkDelete = useMutation({
     mutationFn: () => bulkActionImageTexts(token!, { ids: Array.from(selected), action: 'delete' }),
     onSuccess: ({ affected }) => {
-      toast.success(`Deleted ${affected} image-text${affected === 1 ? '' : 's'}`);
+      toast.success(t('textsList.toastBulkDeleted', { count: affected }));
       setSelected(new Set());
       setConfirmBulkDelete(false);
       invalidate();
     },
-    onError: (err: Error) => toast.error('Bulk delete failed', { description: err.message }),
+    onError: (err: Error) =>
+      toast.error(t('textsList.toastBulkDeleteFailed'), { description: err.message }),
   });
 
   async function exportTo(format: 'csv' | 'json') {
@@ -277,7 +280,7 @@ export function TextsList() {
     // skip the Authorization header and 401.
     const qs = buildExportQuery(filters, format);
     const url = `${API_BASE_URL}/api/v1/manuscripts/management/image-texts/export/?${qs}`;
-    const toastId = toast.loading('Preparing export…');
+    const toastId = toast.loading(t('textsList.toastPreparingExport'));
     try {
       const res = await fetch(url, { headers: { Authorization: `Token ${token}` } });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -291,9 +294,9 @@ export function TextsList() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(objectUrl);
-      toast.success(`Downloaded ${filename}`, { id: toastId });
+      toast.success(t('textsList.toastDownloaded', { filename }), { id: toastId });
     } catch (err) {
-      toast.error('Export failed', {
+      toast.error(t('textsList.toastExportFailed'), {
         id: toastId,
         description: err instanceof Error ? err.message : String(err),
       });
@@ -308,32 +311,32 @@ export function TextsList() {
         <CardHeader className="pb-3">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <CardTitle className="text-base font-medium">Browse image-texts</CardTitle>
+              <CardTitle className="text-base font-medium">{t('textsList.title')}</CardTitle>
               <p className="text-xs text-muted-foreground">
-                {total.toLocaleString()} matching {total === 1 ? 'row' : 'rows'}
+                {t('textsList.matchingRows', { count: total })}
                 {activeFilterCount > 0
-                  ? ` · ${activeFilterCount} filter${activeFilterCount === 1 ? '' : 's'} active`
+                  ? ` · ${t('textsList.filtersActive', { count: activeFilterCount })}`
                   : ''}
               </p>
             </div>
             <div className="flex items-center gap-2">
               {activeFilterCount > 0 && (
                 <Button size="sm" variant="ghost" onClick={clearAll} className="h-7 text-xs">
-                  <X className="mr-1 h-3 w-3" /> Clear filters
+                  <X className="mr-1 h-3 w-3" /> {t('textsList.clearFilters')}
                 </Button>
               )}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button size="sm" variant="outline" className="h-7 text-xs">
-                    <Download className="mr-1 h-3 w-3" /> Export
+                    <Download className="mr-1 h-3 w-3" /> {t('textsList.export')}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => void exportTo('csv')}>
-                    CSV (all matching rows)
+                    {t('textsList.exportCsv')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => void exportTo('json')}>
-                    JSON (all matching rows)
+                    {t('textsList.exportJson')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -343,10 +346,10 @@ export function TextsList() {
                 className="h-7 text-xs"
                 onClick={() => setImportDialogOpen(true)}
               >
-                <Upload className="mr-1 h-3 w-3" /> Import TEI
+                <Upload className="mr-1 h-3 w-3" /> {t('textsList.importTei')}
               </Button>
               <Button size="sm" className="h-7 text-xs" onClick={() => setNewDialogOpen(true)}>
-                <Plus className="mr-1 h-3 w-3" /> New
+                <Plus className="mr-1 h-3 w-3" /> {t('textsList.new')}
               </Button>
             </div>
           </div>
@@ -358,27 +361,27 @@ export function TextsList() {
               <Input
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Search content or language…"
+                placeholder={t('textsList.searchPlaceholder')}
                 className="h-8 pl-8 text-sm"
               />
             </div>
             <FilterSelect
-              label="Kind"
+              label={t('textsList.filterKind')}
               value={filters.kind}
               options={KINDS}
               onChange={(v) => setParams({ kind: v || null, page: null })}
             />
             <FilterSelect
-              label="Status"
+              label={t('textsList.filterStatus')}
               value={filters.status}
               options={STATUSES}
               onChange={(v) => setParams({ status: v || null, page: null })}
             />
             <FilterSelect
-              label="Language"
+              label={t('textsList.filterLanguage')}
               value={filters.language}
               options={[
-                { value: '__unset__', label: '(unset)' },
+                { value: '__unset__', label: t('textsList.filterLanguageUnset') },
                 { value: 'la', label: 'la' },
                 { value: 'en', label: 'en' },
                 { value: 'fr', label: 'fr' },
@@ -387,11 +390,11 @@ export function TextsList() {
               onChange={(v) => setParams({ language: v || null, page: null })}
             />
             <FilterSelect
-              label="Content"
+              label={t('textsList.filterContent')}
               value={filters.empty}
               options={[
-                { value: 'true', label: 'Empty only' },
-                { value: 'false', label: 'Non-empty' },
+                { value: 'true', label: t('textsList.filterContentEmpty') },
+                { value: 'false', label: t('textsList.filterContentNonEmpty') },
               ]}
               onChange={(v) => setParams({ empty: v || null, page: null })}
             />
@@ -412,7 +415,7 @@ export function TextsList() {
 
           {error && (
             <div className="mx-6 rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs text-destructive">
-              Could not load list: {(error as Error).message}
+              {t('textsList.loadFailed', { message: (error as Error).message })}
             </div>
           )}
 
@@ -424,15 +427,15 @@ export function TextsList() {
                     <Checkbox
                       checked={allVisibleSelected || (someVisibleSelected && 'indeterminate')}
                       onCheckedChange={toggleAllVisible}
-                      aria-label="Select all visible"
+                      aria-label={t('textsList.selectAllVisible')}
                     />
                   </TableHead>
-                  <TableHead className="w-[110px]">Kind</TableHead>
-                  <TableHead>Image</TableHead>
-                  <TableHead className="w-[100px]">Status</TableHead>
-                  <TableHead className="w-[80px]">Lang</TableHead>
-                  <TableHead className="w-[90px] text-right">Chars</TableHead>
-                  <TableHead className="w-[200px]">Modified</TableHead>
+                  <TableHead className="w-[110px]">{t('textsList.columnKind')}</TableHead>
+                  <TableHead>{t('textsList.columnImage')}</TableHead>
+                  <TableHead className="w-[100px]">{t('textsList.columnStatus')}</TableHead>
+                  <TableHead className="w-[80px]">{t('textsList.columnLang')}</TableHead>
+                  <TableHead className="w-[90px] text-right">{t('textsList.columnChars')}</TableHead>
+                  <TableHead className="w-[200px]">{t('textsList.columnModified')}</TableHead>
                   <TableHead className="w-[180px]" />
                 </TableRow>
               </TableHeader>
@@ -443,7 +446,7 @@ export function TextsList() {
                       colSpan={8}
                       className="h-24 text-center text-sm text-muted-foreground"
                     >
-                      {isFetching ? 'Loading…' : 'No image-texts match.'}
+                      {isFetching ? t('textsList.loading') : t('textsList.noMatches')}
                     </TableCell>
                   </TableRow>
                 ) : (

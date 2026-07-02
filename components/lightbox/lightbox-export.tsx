@@ -378,7 +378,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
                 `}
               >
                 <FileText className="h-5 w-5 mb-1" />
-                <div className="text-sm font-medium">PDF</div>
+                <div className="text-sm font-medium">{t('export.formatPdf')}</div>
                 <div className="text-xs text-muted-foreground">{t('export.pdfDocument')}</div>
               </button>
               <button
@@ -389,7 +389,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
                 `}
               >
                 <ImageIcon className="h-5 w-5 mb-1" />
-                <div className="text-sm font-medium">Image</div>
+                <div className="text-sm font-medium">{t('export.formatImage')}</div>
                 <div className="text-xs text-muted-foreground">{t('export.imageSingle')}</div>
               </button>
               <button
@@ -400,7 +400,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
                 `}
               >
                 <FileJson className="h-5 w-5 mb-1" />
-                <div className="text-sm font-medium">JSON</div>
+                <div className="text-sm font-medium">{t('export.formatJson')}</div>
                 <div className="text-xs text-muted-foreground">{t('export.jsonData')}</div>
               </button>
               <button
@@ -411,7 +411,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
                 `}
               >
                 <FileText className="h-5 w-5 mb-1" />
-                <div className="text-sm font-medium">TEI XML</div>
+                <div className="text-sm font-medium">{t('export.formatTei')}</div>
                 <div className="text-xs text-muted-foreground">{t('export.teiFormat')}</div>
               </button>
               <button
@@ -422,7 +422,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
                 `}
               >
                 <Printer className="h-5 w-5 mb-1" />
-                <div className="text-sm font-medium">Print</div>
+                <div className="text-sm font-medium">{t('export.formatPrint')}</div>
                 <div className="text-xs text-muted-foreground">{t('export.printFriendly')}</div>
               </button>
             </div>
@@ -431,7 +431,7 @@ ${annotationElements ? annotationElements + '\n' : ''}    </surface>`;
 
         <div className="p-4 border-t flex items-center justify-end gap-2">
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            {t('export.cancel')}
           </Button>
           <Button onClick={handleExport} disabled={isExporting}>
             {isExporting ? t('export.exporting') : t('export.exportButton')}

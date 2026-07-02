@@ -735,14 +735,17 @@ const AnnotationActivity = memo(function AnnotationActivity({
 }: {
   series: AnnotationActivityBucket[];
 }) {
+  const t = useTranslations('backoffice');
   const max = Math.max(1, ...series.map((s) => s.count));
   const total = series.reduce((a, s) => a + s.count, 0);
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-medium">30-day region drawing</CardTitle>
+        <CardTitle className="text-base font-medium">
+          {t('texts.annotationActivity.title')}
+        </CardTitle>
         <p className="text-xs text-muted-foreground">
-          New text-region annotations per day. {total.toLocaleString()} drawn in the last 30 days.
+          {t('texts.annotationActivity.description', { count: total })}
         </p>
       </CardHeader>
       <CardContent>
@@ -750,10 +753,7 @@ const AnnotationActivity = memo(function AnnotationActivity({
           // Historical Graphs predate the `created` timestamp added in
           // migration 0008, so the sparkline starts empty even on a fully
           // populated corpus. Calling that out beats showing nothing.
-          <p className="text-sm text-muted-foreground">
-            No regions drawn in the last 30 days. (Annotations created before this trend was added
-            are dated only from the time they&rsquo;re next edited.)
-          </p>
+          <p className="text-sm text-muted-foreground">{t('texts.annotationActivity.empty')}</p>
         ) : (
           <div className="flex h-32 items-end gap-1">
             {series.map((s) => {
@@ -762,7 +762,7 @@ const AnnotationActivity = memo(function AnnotationActivity({
                 <div
                   key={s.date}
                   className="group relative flex h-full flex-1 flex-col-reverse"
-                  title={`${s.date}: ${s.count} region${s.count === 1 ? '' : 's'}`}
+                  title={t('texts.annotationActivity.barTitle', { date: s.date, count: s.count })}
                 >
                   <span
                     className="rounded-t-sm bg-[hsl(160_55%_45%)]/80"
@@ -788,19 +788,20 @@ const LanguageBreakdown = memo(function LanguageBreakdown({
 }: {
   languages: LanguageRow[];
 }) {
+  const t = useTranslations('backoffice');
   const max = Math.max(1, ...languages.map((l) => l.total));
   return (
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base font-medium">
           <LanguagesIcon className="h-4 w-4 text-muted-foreground" />
-          Languages
+          {t('texts.languages.title')}
         </CardTitle>
-        <p className="text-xs text-muted-foreground">Distribution across the corpus, top first.</p>
+        <p className="text-xs text-muted-foreground">{t('texts.languages.description')}</p>
       </CardHeader>
       <CardContent>
         {languages.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No languages recorded.</p>
+          <p className="text-sm text-muted-foreground">{t('texts.languages.empty')}</p>
         ) : (
           <ul className="space-y-2">
             {languages.map((l) => {

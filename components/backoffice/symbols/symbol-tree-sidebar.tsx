@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import { Search, ChevronRight, Layers, Tag, MapPin, Type } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -52,6 +53,7 @@ export function SymbolTreeSidebar({
   activeTab: controlledTab,
   onTabChange,
 }: SymbolTreeSidebarProps) {
+  const t = useTranslations('backoffice');
   const [internalTab, setInternalTab] = useState('characters');
   const tab = controlledTab ?? internalTab;
   const setTab = onTabChange ?? setInternalTab;
@@ -113,21 +115,37 @@ export function SymbolTreeSidebar({
   return (
     <Tabs value={tab} onValueChange={setTab} className="flex h-full flex-col">
       <TabsList className="mx-2 mt-2 grid w-auto grid-cols-4 bg-muted/50">
-        <TabsTrigger value="characters" className="text-xs px-1 gap-1" title="Characters">
+        <TabsTrigger
+          value="characters"
+          className="text-xs px-1 gap-1"
+          title={t('symbols.tabCharacters')}
+        >
           <Type className="h-3.5 w-3.5" />
-          <span className="hidden xl:inline">Chars</span>
+          <span className="hidden xl:inline">{t('symbols.tabCharactersShort')}</span>
         </TabsTrigger>
-        <TabsTrigger value="components" className="text-xs px-1 gap-1" title="Components">
+        <TabsTrigger
+          value="components"
+          className="text-xs px-1 gap-1"
+          title={t('symbols.tabComponents')}
+        >
           <Layers className="h-3.5 w-3.5" />
-          <span className="hidden xl:inline">Comps</span>
+          <span className="hidden xl:inline">{t('symbols.tabComponentsShort')}</span>
         </TabsTrigger>
-        <TabsTrigger value="features" className="text-xs px-1 gap-1" title="Features">
+        <TabsTrigger
+          value="features"
+          className="text-xs px-1 gap-1"
+          title={t('symbols.tabFeatures')}
+        >
           <Tag className="h-3.5 w-3.5" />
-          <span className="hidden xl:inline">Feats</span>
+          <span className="hidden xl:inline">{t('symbols.tabFeaturesShort')}</span>
         </TabsTrigger>
-        <TabsTrigger value="positions" className="text-xs px-1 gap-1" title="Positions">
+        <TabsTrigger
+          value="positions"
+          className="text-xs px-1 gap-1"
+          title={t('symbols.tabPositions')}
+        >
           <MapPin className="h-3.5 w-3.5" />
-          <span className="hidden xl:inline">Pos</span>
+          <span className="hidden xl:inline">{t('symbols.tabPositionsShort')}</span>
         </TabsTrigger>
       </TabsList>
 

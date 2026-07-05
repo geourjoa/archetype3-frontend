@@ -234,6 +234,13 @@
       "noTextRecorded": "Aucun texte enregistré pour cette image"
     }
   },
+  "landing": {
+    "aboutEyebrow": "À propos du projet",
+    "historicalContextLink": "En savoir plus sur le contexte historique",
+    "latestEyebrow": "À la une",
+    "newsTitle": "Actualités",
+    "featureArticlesTitle": "Articles de fond"
+  },
   "content": {
     "intro": {
       "searchCollection": "Rechercher dans la collection",

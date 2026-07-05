@@ -185,7 +185,7 @@ export function LightboxExport({ onClose }: LightboxExportProps) {
       .join('');
     const count = workspaceImages.length;
     win.document.write(
-      `<!doctype html><html><head><meta charset="utf-8"><title>Lightbox — print</title>` +
+      `<!doctype html><html><head><meta charset="utf-8"><title>${escapeXml(t('export.printTabTitle'))}</title>` +
         `<style>` +
         `@page { margin: 12mm; }` +
         `body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 16px; color: #111; }` +
@@ -196,7 +196,7 @@ export function LightboxExport({ onClose }: LightboxExportProps) {
         `figcaption { font-size: 11px; color: #333; margin-top: 6px; }` +
         `</style></head>` +
         `<body onload="window.focus();window.print();">` +
-        `<h1>Models of Authority — Lightbox (${count} image${count === 1 ? '' : 's'})</h1>` +
+        `<h1>${escapeXml(t('export.printHeading', { count }))}</h1>` +
         `<div class="grid">${figures}</div>` +
         `</body></html>`
     );
@@ -232,7 +232,7 @@ export function LightboxExport({ onClose }: LightboxExportProps) {
       }
     }
     if (failed > 0) {
-      toast.error(`Failed to export ${failed} image${failed > 1 ? 's' : ''}`);
+      toast.error(t('export.toastFailedToExportImages', { count: failed }));
     }
   };
 

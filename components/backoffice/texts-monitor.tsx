@@ -849,28 +849,28 @@ const LanguageBreakdown = memo(function LanguageBreakdown({
 // ──────────────────── Recent edits ────────────────────
 
 const RecentEdits = memo(function RecentEdits({ rows }: { rows: RecentRow[] }) {
+  const t = useTranslations('backoffice');
   const [filter, setFilter] = useState<'all' | Kind>('all');
   const filtered = filter === 'all' ? rows : rows.filter((r) => r.type === filter);
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between gap-3 pb-3">
         <div>
-          <CardTitle className="text-base font-medium">Recent edits</CardTitle>
+          <CardTitle className="text-base font-medium">{t('texts.recent.title')}</CardTitle>
           <p className="text-xs text-muted-foreground">
-            The {rows.length} most-recently modified image-texts. Click the row to edit; ↗ opens the
-            public viewer.
+            {t('texts.recent.description', { count: rows.length })}
           </p>
         </div>
         <Tabs value={filter} onValueChange={(v) => setFilter(v as 'all' | Kind)}>
           <TabsList className="h-8">
             <TabsTrigger value="all" className="text-xs">
-              All
+              {t('texts.recent.filterAll')}
             </TabsTrigger>
             <TabsTrigger value="Transcription" className="text-xs">
-              Transcription
+              {t('texts.legend.transcription')}
             </TabsTrigger>
             <TabsTrigger value="Translation" className="text-xs">
-              Translation
+              {t('texts.legend.translation')}
             </TabsTrigger>
           </TabsList>
           <TabsContent value={filter} />
@@ -878,19 +878,25 @@ const RecentEdits = memo(function RecentEdits({ rows }: { rows: RecentRow[] }) {
       </CardHeader>
       <CardContent className="px-0">
         {filtered.length === 0 ? (
-          <p className="px-6 py-8 text-center text-sm text-muted-foreground">Nothing to show.</p>
+          <p className="px-6 py-8 text-center text-sm text-muted-foreground">
+            {t('texts.recent.empty')}
+          </p>
         ) : (
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[110px]">Kind</TableHead>
-                  <TableHead>Image</TableHead>
-                  <TableHead className="w-[90px]">Status</TableHead>
-                  <TableHead className="w-[80px]">Lang</TableHead>
-                  <TableHead className="w-[90px] text-right">Chars</TableHead>
-                  <TableHead className="w-[90px] text-right">Regions</TableHead>
-                  <TableHead className="w-[180px]">Modified</TableHead>
+                  <TableHead className="w-[110px]">{t('texts.recent.colKind')}</TableHead>
+                  <TableHead>{t('texts.recent.colImage')}</TableHead>
+                  <TableHead className="w-[90px]">{t('texts.recent.colStatus')}</TableHead>
+                  <TableHead className="w-[80px]">{t('texts.recent.colLang')}</TableHead>
+                  <TableHead className="w-[90px] text-right">
+                    {t('texts.recent.colChars')}
+                  </TableHead>
+                  <TableHead className="w-[90px] text-right">
+                    {t('texts.recent.colRegions')}
+                  </TableHead>
+                  <TableHead className="w-[180px]">{t('texts.recent.colModified')}</TableHead>
                   <TableHead className="w-[60px]" />
                 </TableRow>
               </TableHeader>
@@ -917,7 +923,9 @@ const RecentEdits = memo(function RecentEdits({ rows }: { rows: RecentRow[] }) {
                             KIND_TONE[r.type]
                           )}
                         >
-                          {r.type === 'Transcription' ? 'Transcr.' : 'Transl.'}
+                          {r.type === 'Transcription'
+                            ? t('texts.recent.kindTranscriptionAbbr')
+                            : t('texts.recent.kindTranslationAbbr')}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -931,7 +939,7 @@ const RecentEdits = memo(function RecentEdits({ rows }: { rows: RecentRow[] }) {
                           </span>
                           {r.locus && (
                             <span className="text-[11px] text-muted-foreground">
-                              folio {r.locus}
+                              {t('texts.recent.folio', { locus: r.locus })}
                             </span>
                           )}
                         </Link>

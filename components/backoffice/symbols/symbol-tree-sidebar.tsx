@@ -154,7 +154,7 @@ export function SymbolTreeSidebar({
         <div className="p-3 space-y-2">
           {/* Inline create */}
           <Input
-            placeholder="New character name... (Enter to create)"
+            placeholder={t('symbols.newCharacterPlaceholder')}
             value={newCharName}
             onChange={(e) => setNewCharName(e.target.value)}
             onKeyDown={(e) => {
@@ -171,7 +171,7 @@ export function SymbolTreeSidebar({
           <div className="relative">
             <Search className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search characters..."
+              placeholder={t('symbols.searchCharactersPlaceholder')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="h-8 pl-7 text-sm"
@@ -185,8 +185,8 @@ export function SymbolTreeSidebar({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__all">All Types</SelectItem>
-                <SelectItem value="__untyped">Untyped</SelectItem>
+                <SelectItem value="__all">{t('symbols.allTypesOption')}</SelectItem>
+                <SelectItem value="__untyped">{t('symbols.untypedOption')}</SelectItem>
                 {CHARACTER_TYPES.map((t) => (
                   <SelectItem key={t} value={t}>
                     {t}
@@ -236,7 +236,9 @@ export function SymbolTreeSidebar({
             ))}
             {filtered.length === 0 && (
               <p className="px-2 py-4 text-center text-xs text-muted-foreground">
-                {search || typeFilter !== '__all' ? 'No matching characters' : 'No characters yet'}
+                {search || typeFilter !== '__all'
+                  ? t('symbols.noMatchingCharacters')
+                  : t('symbols.noCharactersYet')}
               </p>
             )}
           </div>

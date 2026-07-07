@@ -15,7 +15,7 @@ function getLinks(siteTitle: string) {
     { href: '/about/about-models-of-authority', label: 'Acknowledgements and Image Rights' },
     { href: '/about/about-models-of-authority', label: 'Privacy and Cookie Policy' },
     { href: '/about/accessibility', label: 'Accessibility Statement' },
-    { href: '/search/manuscripts', label: 'Search' },
+    { href: '/search/manuscripts', label: 'Explore' },
     { href: '/about/about-models-of-authority', label: 'About' },
   ];
 }

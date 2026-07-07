@@ -14,7 +14,7 @@ import {
 } from '@/components/search/keyword-search-input';
 import { resolveSuggestionTarget } from '@/lib/search-suggestion-target';
 import {
-  Search,
+  Compass,
   Home,
   Menu,
   X,
@@ -187,8 +187,8 @@ export default function Header() {
               className={cn('group', navLinkClass(!!isActive('/search')))}
             >
               <Link href="/search/manuscripts">
-                <Search className="h-4 w-4 mr-1 group-hover:scale-110 transition-transform" />
-                {t('search')}
+                <Compass className="h-4 w-4 mr-1 group-hover:scale-110 transition-transform" />
+                {t('explore')}
               </Link>
             </Button>
           </li>
@@ -204,7 +204,7 @@ export default function Header() {
             >
               <Link href="/collection">
                 <FolderOpen className="h-4 w-4 mr-1 group-hover:scale-110 transition-transform" />
-                {t('collection', { name: activeCollection.name, count: items.length })}
+                {activeCollection.name} ({items.length})
               </Link>
             </Button>
           </li>
